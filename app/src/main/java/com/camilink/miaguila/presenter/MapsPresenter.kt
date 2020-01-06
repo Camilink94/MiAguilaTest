@@ -39,9 +39,15 @@ class MapsPresenter(private val view: View) : LocationRepo.LocationRepoListener,
         locationRepo.getFirstRoute()
     }
 
+    fun end() {
+        locationRepo.stopLocationService()
+    }
+
+    //region RepoListener
     override fun showFirstRoute(polyOptions: PolylineOptions) {
         view.showFirstRoute(polyOptions)
     }
+    //endregion
 
     interface View {
 

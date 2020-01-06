@@ -5,6 +5,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
 import org.koin.core.KoinComponent
@@ -16,7 +17,11 @@ class LocationRepo(private val listener: LocationRepoListener) : LocationListene
 
     @SuppressLint("MissingPermission")
     fun startLocationService() {
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0f, this)
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0f, this)
+    }
+
+    fun stopLocationService() {
+        locationManager.removeUpdates(this)
     }
 
     fun getFirstRoute() {

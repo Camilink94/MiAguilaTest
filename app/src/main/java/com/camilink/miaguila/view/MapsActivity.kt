@@ -72,6 +72,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.end()
+    }
+
     //region View
     override fun showFirstRoute(polyOptions: PolylineOptions) {
         mMap.addPolyline(polyOptions)
