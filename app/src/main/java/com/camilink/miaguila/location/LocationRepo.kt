@@ -16,7 +16,7 @@ class LocationRepo(private val listener: LocationRepoListener) : LocationListene
 
     @SuppressLint("MissingPermission")
     fun startLocationService() {
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0f,this)
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0f, this)
     }
 
     fun getFirstRoute() {

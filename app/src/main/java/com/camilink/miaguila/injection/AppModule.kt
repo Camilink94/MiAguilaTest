@@ -13,7 +13,6 @@ val appModule: Module = module {
 
     factory { (listener: LocationRepo.LocationRepoListener) -> LocationRepo(listener) }
     factory { (view: MapsPresenter.View) -> MapsPresenter(view) }
-    factory { androidApplication() }
-    factory { androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager }
+    factory { androidApplication().getSystemService(Context.LOCATION_SERVICE) as LocationManager }
 
 }
