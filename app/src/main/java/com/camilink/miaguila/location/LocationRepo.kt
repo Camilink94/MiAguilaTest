@@ -6,6 +6,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
+import com.camilink.miaguila.data.LatLongData
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
 import org.koin.core.KoinComponent
@@ -25,11 +26,12 @@ class LocationRepo(private val listener: LocationRepoListener) : LocationListene
     }
 
     fun getFirstRoute() {
-        val routeOptions: PolylineOptions = PolylineOptions()
-            .add(LatLng(4.667426, -74.056624))
-            .add(LatLng(4.672655, -74.054071))
+        val points = arrayListOf<LatLongData>(
+            LatLongData(lat = 4.667426, long = -74.056624),
+            LatLongData(lat = 4.672655, long = -74.054071)
+        )
 
-        listener.showFirstRoute(routeOptions)
+        listener.showFirstRoute(points)
     }
 
     //region LocationListener
@@ -50,8 +52,8 @@ class LocationRepo(private val listener: LocationRepoListener) : LocationListene
     }
     //endregion
 
-    interface LocationRepoListener {
-        fun showFirstRoute(polyOptions: PolylineOptions)
+    interface LocationListener {
+        fun showFirstRoute(points: ArrayList<LatLongData>)
     }
 
 }

@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import com.camilink.miaguila.data.LatLongData
 import com.camilink.miaguila.location.LocationRepo
 import com.google.android.gms.maps.model.PolylineOptions
 import org.koin.core.KoinComponent
@@ -44,14 +45,14 @@ class MapsPresenter(private val view: View) : LocationRepo.LocationRepoListener,
     }
 
     //region RepoListener
-    override fun showFirstRoute(polyOptions: PolylineOptions) {
-        view.showFirstRoute(polyOptions)
+    override fun showFirstRoute(points: ArrayList<LatLongData>) {
+        view.showFirstRoute(points)
     }
     //endregion
 
     interface View {
 
-        fun showFirstRoute(polyOptions: PolylineOptions)
+        fun showFirstRoute(points: ArrayList<LatLongData>)
         fun requestLocationPermission()
         fun showPermissionErrorMessage()
 
