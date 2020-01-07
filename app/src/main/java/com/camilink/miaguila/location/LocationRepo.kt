@@ -7,8 +7,6 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import com.camilink.miaguila.data.LatLongData
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.PolylineOptions
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -26,7 +24,7 @@ class LocationRepo(private val listener: LocationRepoListener) : LocationListene
     }
 
     fun getFirstRoute() {
-        val points = arrayListOf<LatLongData>(
+        val points = arrayListOf(
             LatLongData(lat = 4.667426, long = -74.056624),
             LatLongData(lat = 4.672655, long = -74.054071)
         )
