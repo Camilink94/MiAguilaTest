@@ -7,7 +7,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.widget.Toast
 import com.camilink.miaguila.R
 import com.camilink.miaguila.data.LatLongData
@@ -22,7 +21,6 @@ import com.google.android.gms.maps.model.PolylineOptions
 import kotlinx.android.synthetic.main.activity_maps.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
-
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View {
 

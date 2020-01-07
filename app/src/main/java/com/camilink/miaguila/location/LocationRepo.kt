@@ -52,7 +52,7 @@ class LocationRepo(private val listener: LocationRepoListener) : LocationListene
     }
     //endregion
 
-    interface LocationListener {
+    interface LocationRepoListener {
         fun showFirstRoute(points: ArrayList<LatLongData>)
     }
 
