@@ -5,17 +5,17 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.os.Build
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import com.camilink.miaguila.R
 import com.camilink.miaguila.data.LatLongData
 import com.camilink.miaguila.presenter.MapsPresenter
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
@@ -35,6 +35,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View
         const val REQUEST_LOCATION = 0
     }
 
+    // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -82,6 +83,65 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View
         super.onDestroy()
         presenter.end()
     }
+    //endregion
+
+    fun printLocations() {
+
+        val builder = getFirstRouteBoundsBuilder()
+
+        locationPoints.forEachIndexed { i, location ->
+
+            builder.include(LatLng(location.latitude, location.longitude))
+
+            val circleOptions = CircleOptions()
+            circleOptions.center(LatLng(location.latitude, location.longitude))
+            circleOptions.radius(10.toDouble())
+            circleOptions.strokeColor(Color.BLACK)
+            circleOptions.strokeWidth(1f)
+
+            if (i == locationPoints.size - 1) {
+                circleOptions.fillColor(resources.getColor(R.color.markerCurrent))
+            } else {
+                circleOptions.fillColor(resources.getColor(R.color.markerHistory))
+            }
+
+            mMap.addCircle(circleOptions)
+        }
+
+        val bounds = builder.build()
+
+        val padding = 40
+        val cu = CameraUpdateFactory.newLatLngBounds(bounds, padding)
+        animateCamera(cu)
+    }
+
+    private fun getFirstRouteBoundsBuilder(): LatLngBounds.Builder {
+
+        val builder = LatLngBounds.Builder()
+        this.firstRoutePoints.forEach {
+            builder.include(LatLng(it.lat, it.long))
+        }
+
+        return builder
+    }
+
+    private fun animateCamera(cameraUpdate: CameraUpdate) {
+        try {
+            mMap.animateCamera(cameraUpdate)
+        } catch (ex: IllegalStateException) {
+            val mapView: View? = map.view
+            if (mapView?.viewTreeObserver?.isAlive == true) {
+                mapView.viewTreeObserver.addOnGlobalLayoutListener(
+                    object : ViewTreeObserver.OnGlobalLayoutListener {
+                        override fun onGlobalLayout() {
+                            mapView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                            mMap.animateCamera(cameraUpdate)
+                        }
+                    })
+            }
+        }
+    }
 
     //region View
     override fun showFirstRoute(points: ArrayList<LatLongData>) {
@@ -95,30 +155,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View
 
         //Move camera to include route
 
-        val builder = LatLngBounds.Builder()
-        this.firstRoutePoints.forEach {
-            builder.include(LatLng(it.lat, it.long))
-        }
-        val bounds = builder.build();
+        val builder = getFirstRouteBoundsBuilder()
+        val bounds = builder.build()
 
         val padding = 250
         val cu = CameraUpdateFactory.newLatLngBounds(bounds, padding)
 
-        try {
-            mMap.animateCamera(cu)
-        } catch (ex: IllegalStateException) {
-            val mapView: View? = map.view
-            if (mapView?.viewTreeObserver?.isAlive == true) {
-                mapView.viewTreeObserver.addOnGlobalLayoutListener(
-                    object : ViewTreeObserver.OnGlobalLayoutListener {
-                        override fun onGlobalLayout() {
-                            mapView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-
-                            mMap.animateCamera(cu)
-                        }
-                    })
-            }
-        }
+        animateCamera(cu)
     }
 
     override fun requestLocationPermission() {
@@ -132,7 +175,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View
     }
 
     override fun updateLocation(location: Location) {
-
+        locationPoints.add(location)
+        printLocations()
     }
     //endregion
 }
