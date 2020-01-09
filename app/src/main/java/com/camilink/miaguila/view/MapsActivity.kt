@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
@@ -25,7 +26,8 @@ import org.koin.core.parameter.parametersOf
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View {
 
     val presenter: MapsPresenter by inject { parametersOf(this) }
-    val points = arrayListOf<LatLongData>()
+    val firstRoutePoints = arrayListOf<LatLongData>()
+    val locationPoints = arrayListOf<Location>()
 
     private lateinit var mMap: GoogleMap
 
@@ -84,17 +86,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View
     //region View
     override fun showFirstRoute(points: ArrayList<LatLongData>) {
 
-        this.points.addAll(points)
+        this.firstRoutePoints.addAll(points)
 
         val routeOptions = PolylineOptions()
-        this.points.forEach { routeOptions.add(LatLng(it.lat, it.long)) }
+        this.firstRoutePoints.forEach { routeOptions.add(LatLng(it.lat, it.long)) }
 
         mMap.addPolyline(routeOptions)
 
         //Move camera to include route
 
         val builder = LatLngBounds.Builder()
-        this.points.forEach {
+        this.firstRoutePoints.forEach {
             builder.include(LatLng(it.lat, it.long))
         }
         val bounds = builder.build();
@@ -127,6 +129,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View
 
     override fun showPermissionErrorMessage() {
         Toast.makeText(this, R.string.error_permission_denied, Toast.LENGTH_LONG).show()
+    }
+
+    override fun updateLocation(location: Location) {
+
     }
     //endregion
 }

@@ -34,7 +34,9 @@ class LocationRepo(private val listener: LocationRepoListener) : LocationListene
 
     //region LocationListener
     override fun onLocationChanged(location: Location?) {
-
+        location?.let {
+            listener.updateLocation(location)
+        }
     }
 
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
@@ -51,7 +53,10 @@ class LocationRepo(private val listener: LocationRepoListener) : LocationListene
     //endregion
 
     interface LocationRepoListener {
+
         fun showFirstRoute(points: ArrayList<LatLongData>)
+        fun updateLocation(location: Location)
+
     }
 
 }

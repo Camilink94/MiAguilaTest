@@ -3,6 +3,7 @@ package com.camilink.miaguila.presenter
 import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
+import android.location.Location
 import androidx.core.content.ContextCompat
 import com.camilink.miaguila.data.LatLongData
 import com.camilink.miaguila.location.LocationRepo
@@ -47,13 +48,20 @@ class MapsPresenter(private val view: View) : LocationRepo.LocationRepoListener,
     override fun showFirstRoute(points: ArrayList<LatLongData>) {
         view.showFirstRoute(points)
     }
+
+    override fun updateLocation(location: Location) {
+        view.updateLocation(location)
+    }
     //endregion
 
     interface View {
 
         fun showFirstRoute(points: ArrayList<LatLongData>)
+
         fun requestLocationPermission()
         fun showPermissionErrorMessage()
+
+        fun updateLocation(location: Location)
 
     }
 }
