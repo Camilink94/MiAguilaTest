@@ -40,6 +40,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
+        updateSpeed(0f)
+
         presenter.init()
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -115,6 +117,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View
         animateCamera(cu)
     }
 
+    fun updateSpeed(speed: Float) {
+        speedText.setText(getString(R.string.speed_txt, speed.toInt()))
+    }
+
     private fun getFirstRouteBoundsBuilder(): LatLngBounds.Builder {
 
         val builder = LatLngBounds.Builder()
@@ -177,6 +183,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MapsPresenter.View
     override fun updateLocation(location: Location) {
         locationPoints.add(location)
         printLocations()
+
+        if (location.hasSpeed()) updateSpeed(location.speed)
     }
     //endregion
 }
