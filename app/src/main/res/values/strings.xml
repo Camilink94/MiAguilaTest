@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MiAguila</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="error_permission_denied">Se requiere el permiso de ubicación.</string>
+
+    <string name="speed_txt">%d\nkm/h</string>
 </resources>
